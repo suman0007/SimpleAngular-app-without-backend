@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html>
 <script src= "libs/js/angular.js"></script>
 <script src= "libs/js/angular-route.js"></script>
@@ -10,87 +10,13 @@
 <body>
 
 <div ng-app="myApp" ng-controller="libController">
-<ng-view></ng-view>
-
-<form class="form-horizontal" name= loginForm ng-show="isLogin" style="padding-top:2%">
-  <div class="form-group">
-    <label for="firstName" class="col-sm-2 control-label">First Name:</label>
-    <div class="col-sm-3">
-      <input type="firstName" class="form-control" name="firstName" ng-model="person.firstName" placeholder="First Name" required>
-         <div ng-show="loginForm.firstName.$touched">
-      		<div ng-show="loginForm.firstName.$error.required" style="color: red;font-size: 11px;">Please enter your First Name.</div>
-    </div>
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="lastName" class="col-sm-2 control-label">Last Name:</label>
-    <div class="col-sm-3">
-      <input type="lastName" class="form-control" id="lastName" ng-model="person.lastName" placeholder="Last Name">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="strongSecret" class="col-sm-2 control-label" >Password</label>
-    <div class="col-sm-3">
-      <input type="password" class="form-control" name="strongSecret" ng-model="person.strongSecret" placeholder="Password"   validate-password required>
-        <ul class="error-msgs" ng-messages="loginForm.strongSecret.$error">
-        <li ng-message="numberValidator">Password has to contain at least 1 number</li>
-        <li ng-message="uppercaseValidator">Password has to contain at least 1 uppercase</li>
-        <li ng-message="sixCharactersValidator">Password has to be exactly 6 characters long</li>
-        </ul>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-5">
-      <button type="submit" class="btn btn-success" ng-click="getProducts(loginForm)">Sign in</button>
-    </div>
-  </div>
-</form>
-    
-<div ng-show="!isLogin" >
-    <div class="jumbotron" style="padding-top:1%">
-     <div style="padding-left:3%"><h3>Welcome {{" "+person.firstName + " " + person.lastName+"!" | uppercase }}</h3><br>
-     Here You can find all the informations about Libraries in Chicago.Best Of Luck.Happy Reading! :)</div>
-    </div>
-   <div style="padding-left:30%;color:blue"> <input type="checkbox" ng-model="checkStatus" ng-change='isChacked(checkStatus)'/>Click to get only Teacher avaliable Libraries</div><br>
-    <div ng-repeat="data in libraryData | teacherAvail:this" style="padding-left:30%" col-sm-5>
-    <div>{{datas.website}}</div>
-        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false" style="width:50%;">
-          <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingOne" style="background-color:0099FF">
-              <h4 class="panel-title">
-                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  {{data.name_}} 
-                </a>
-              </h4>
-            </div>
-            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">
-               Website : <a href="{{data.website}}">{{data.website}}</a><br>
-               Phone: {{data.phone}}<br>
-               Address: {{data.address}},{{data.zip}}<br>
-               Teacher Avaliability:{{data.teacher_in_the_library}}<br>
-               City:{{data.city}} ,State:{{data.state}}
-              </div>
-            </div>
-          </div>
-        </div>
-    </div>    
-</div>
-    
-<style>
-.panel-default>.panel-heading {
-  color: #1C14B9;
-  background-color: #6ED7CA;
-}
-</style>  
-    
+<ng-view></ng-view>    
 </div>
    
-<script src="controllers/libraryController.js"></script>
-<script src="services/serviceFactory.js"></script>
-<script src="directives/customDirective.js"></script>
+<script src="components/libraryModule/controllers/libraryController.js"></script>
+<script src="components/libraryModule/services/serviceFactory.js"></script>
+<script src="components/libraryModule/directives/customDirective.js"></script>
+<script src="components/libraryModule/filters/customFilter.js"></script>
 <script src="routes/router.js"></script>
-<script src="filters/customFilter.js"></script>
 </body>
 </html>
