@@ -29,44 +29,8 @@
 
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-5">
-      <button type="submit" class="btn btn-success" ng-click="getProducts(loginForm)">Sign in</button>
+      <button type="submit" class="btn btn-success" ng-click="isLoginTrue(loginForm)">Sign in</button>
     </div>
   </div>
 </form>
     
-<div ng-show="!isLogin" >
-    <div class="jumbotron" style="padding-top:1%">
-     <div style="padding-left:3%"><h3>Welcome {{" "+person.firstName + " " + person.lastName+"!" | uppercase }}</h3><br>
-     Here You can find all the informations about Libraries in Chicago.Best Of Luck.Happy Reading! :)</div>
-    </div>
-   <div style="padding-left:30%;color:blue"> <input type="checkbox" ng-model="checkStatus" ng-change='isChacked(checkStatus)'/>Click to get only Teacher avaliable Libraries</div><br>
-    <div ng-repeat="data in libraryData | teacherAvail:this" style="padding-left:30%" col-sm-5>
-    <div>{{datas.website}}</div>
-        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="false" style="width:50%;">
-          <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="headingOne" style="background-color:0099FF">
-              <h4 class="panel-title">
-                <div role="button" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="collapseOne">
-                  {{data.name_}} 
-                </div>
-              </h4>
-            </div>
-            <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-              <div class="panel-body">
-               Website : <a href="{{data.website}}">{{data.website}}</a><br>
-               Phone: {{data.phone}}<br>
-               Address: {{data.address}},{{data.zip}}<br>
-               Teacher Avaliability:{{data.teacher_in_the_library}}<br>
-               City:{{data.city}} ,State:{{data.state}}
-              </div>
-            </div>
-          </div>
-        </div>
-    </div>    
-</div>
-    
-<style>
-.panel-default>.panel-heading {
-  color: #1C14B9;
-  background-color: #6ED7CA;
-}

@@ -9,7 +9,7 @@ app.controller('libController', function($scope,$location,$http,$q,myService) {
         return $scope.person.firstName + " " + $scope.person.lastName;
     }
     
-    $scope.getProducts = function(loginForm){
+    $scope.getProducts = function(){
         
        //manually  creating promises
        /* var manualDefer = $q.defer();
@@ -18,14 +18,19 @@ app.controller('libController', function($scope,$location,$http,$q,myService) {
                          console.debug(properResponse);}
                     ,function(rejectWith){console.log(rejectWith);});*/
         
-        if(loginForm.$valid===true){
+            
         //using Service
        $scope.receivedData = myService.async().then(function() {
             $scope.libraryData = myService.data();
-            $scope.isLogin = false;
           });
-        }                    
+                          
     }
+	
+	$scope.isLoginTrue = function(loginForm){
+	 if(loginForm.$valid===true){
+	   $location.url('/login');
+	 }
+	}
    
       $scope.isChacked = function(checkStatus){
           $scope.chacked=checkStatus;
