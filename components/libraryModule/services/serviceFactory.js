@@ -1,18 +1,19 @@
 app.factory('myService', function($http, $q) {
-  var deffered = $q.defer();
-  var data = [];  
-  var myService = {};
-
-  myService.async = function() {
-    $http.get('https://data.cityofchicago.org/resource/psqp-6rmg.json')  
-    .success(function (d) {
-      data = d;
-      console.log(d);
-      deffered.resolve();
-    });
-    return deffered.promise;
-  };
-  myService.data = function() { return data; };
-
-  return myService;
+	var service = {
+            libraryData: [],
+            getLibraries: getLibraries
+        };
+    return service;
+    function getLibraries() {
+            var def = $q.defer();
+            $http.get('https://data.cityofchicago.org/resource/psqp-6rmg.json')
+                .success(function(data) {
+                    service.libraryData = data;
+                    def.resolve(data);
+                })
+                .error(function() {
+                    def.reject("Failed to get libraryData");
+                });
+            return def.promise;
+        }
 });
