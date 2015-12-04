@@ -5,7 +5,7 @@ app.filter('teacherAvail', function() {
         var output = [];
         angular.forEach(input, function(lib_informations) {
 
-          if (lib_informations.teacher_in_the_library === 'Yes') {
+          if (lib_informations.teacher_in_the_library === 'Yes ') {
             output.push(lib_informations)
           }
 
