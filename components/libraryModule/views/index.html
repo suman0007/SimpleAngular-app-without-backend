@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head><title>Suman</title>
+<script type="text/javascript" src="angular.min.js"></script>
+</head>
+<body ng-app="myApp">
+	<div ng-controller="myController">
+	    <!-- info="modelname" -->
+		<div>Name: {{person.name}}</div>
+		<div>Address: {{person.address}}</div>
+
+		<notification message="{{message1}}"></notification>
+
+		<br>
+		<span>This is the textbox on the page</span>
+		<input type="text" ng-model="commentText"/>
+		<span>This is the textbox on the directive</span>
+		<book-comment text="commentText"></book-comment>
+
+		<br>
+		<like-book like="likeFunction(star)"></like-book>
+
+		<br>
+		<a><mouse-clicked ebook>Game of thrones (click me)</mouse-clicked></a><br/>
+		<a><mouse-clicked magazine>PC World (click me)</mouse-clicked></a>
+
+		<br>
+		<item name="Item-1"></item>
+		<item name="Item-2"></item>
+		<item name="Item-3"></item>
+
+		<!-- ---Factory---Service---Provider---- -->
+		<div ng-controller="ProviderController1"></div>
+		<div ng-controller="ProviderController2"></div>
+		<!-- <ng-view></ng-view> 
+		at the time of routing binds page view within this div-->
+	</div>
+</body>
+</html>
+<script type="text/javascript">
+	var app =angular.module('myApp',[]);
+	app.controller('myController',function($scope){
+		$scope.person = {
+			name:'suman',
+			address:'test123'
+		}
+
+		$scope.message1 = "Product created!";
+
+		$scope.likeFunction = function(star) {
+		    alert("I like the book!, and gave " + star + " star.")
+		};
+	});
+
+	//passing this controller to Directive as a parameter
+	app.controller('MouseClickedCtrl', function($element) {
+	    var mouseClicked = this;	 
+	    mouseClicked.bookType = null;	 
+	    mouseClicked.setBookType = function(type) {
+	        mouseClicked.bookType = type
+	    };	 
+	    $element.bind("click", function() {
+	        alert("Typeof book: " + mouseClicked.bookType + " sent for statistical analysis!");
+	    })
+	});
+
+	//"@" Scope: This type of scope is used for passing value to the directive scope. 
+	app.directive("notification", function() {
+    return {
+        restrict: 'E',
+        scope: {
+            message: '@'
+        },
+        template: '<div>{{message}}</div>'
+    }
+	});
+
+	/*"=" Scope: In this scope type, scope variables are passed instead of the values.This feature is constructing two-way data binding between the directive and the page elements or controllers.*/
+	app.directive("bookComment", function() {
+    return {
+        restrict: 'E',
+        scope: {
+            text: '='
+        },
+        template: '<input type="text" ng-model="text"/>'
+    }
+	});
+
+	/*"&" Scope: We are able to pass the value, and reference / expressions to the directive.*/
+	app.directive("likeBook", function() {
+    return {
+        restrict: 'E',
+        scope: {
+            like: '&'
+        },
+        //template: '<input type="button" ng-click="like()" value="Like"/>'
+        //taking and passing parameters to function
+        template: '<input type="text" ng-model="starCount" placeholder="Enter rate count here"/><br/>' +
+        '<input type="button" ng-click="like({star: starCount})" value="Like"/>'
+    }
+	});
+
+	//Directive inheritance.child directive use require keyword to use parent directive.
+	//communication between directives
+	app.directive('mouseClicked', function() {
+    return {
+        restrict: 'E',
+        scope: {},
+        controller: "MouseClickedCtrl as mouseClicked"
+	    }
+	});
+	app.directive('ebook', function() {
+    return {
+        require: "mouseClicked",
+        link: function(scope, element, attrs, mouseClickedCtrl) {
+            mouseClickedCtrl.setBookType("EBOOK");
+        }
+    }
+	}).directive('magazine', function() {
+	    return {
+	        require: "mouseClicked",
+	        link: function(scope, element, attrs, mouseClickedCtrl) {
+	            mouseClickedCtrl.setBookType("MAGAZINE");
+	        }
+	    }
+	});
+
+	//example for isolated scope
+	app.directive("item", function() {
+    return {
+        restrict: 'E',
+        //WITHOUT THIS SCOPE 
+        scope: {},
+        link: function(scope, element, attrs) {
+            scope.name = attrs.name;
+        },
+        template: '<div><strong>Name:</strong> {{name}} <strong>Select Amount:</strong> <select name="count" ng-model="count"><option value="1">1</option><option value="2">2</option></select> <strong>Selected Amount:</strong> {{count}}</div>'
+   		 }
+	});
+
+	/*Provider,Factory and Service differences
+	Provider's get method gets called only once,doesnt depend on no of injections*/
+	app.controller("ProviderController1", function(myProvider) {
+    console.log("ProviderController1 - myProvider: " + myProvider);
+	});
+
+	app.controller("ProviderController2", function(myProvider) { 
+	    console.log("ProviderController2 - myProvider: " + myProvider);
+	});
+
+	app.provider("myProvider", function() {
+    this.$get = function() {
+        console.log("MyProviderFunction.$get() called.");
+        return "My Value";
+	    };
+	});
+	//You want to be able to configure, during the config phase, the object that is going to be created before it’s created.
+	app.provider("compProvider", function() {
+    var name;
+    this.setName = function(newName) {
+        name = newName;
+    };
+    this.$get = function() {
+        return new function() {
+            this.sayHi = function() {
+                console.log("Hi " + name);
+	            };
+	        };
+	    };
+	});
+	mod.config(function(compProviderProvider) { // ADDED config section
+	    // Note the extra "Provider" suffix
+	    compProviderProvider.setName("Suman");
+	});
+
+	//The value you are providing needs to be calculated based on other data
+	app.factory("compFactory", function(multiple) { 
+    	//For returning Object
+	    return new function() { // INLINED our object constructor
+	        this.getValue = function() {
+	            return "My Value";
+	        };
+	    }; 
+	});
+	// CHANGED "factory" to "service"
+	mod.service("myProvider", function() { 
+    // NOTE that the only function being passed is the object constructor from before
+    this.getValue = function() {
+        return "My Value";
+	    };
+	});
+
+    //You are returning an object with methods.
+    app.service("compService", function() {
+    var name = "Bob";
+    this.setName = function(newName) {
+        this.name = newName;
+    };
+    this.getName = function() {
+        return this.name;
+	    }
+	});
+/*So in summary, provider, factory, and service are all providers. A factory is a special case of a provider when all you need in your provider is a $get() function. It allows you to write it with less code. A service is a special case of a factory when you want to return an instance of a new object, with the same benefit of writing less code.*/
+
+	//app.config(function($routeProvider)) for routing and add route provider js
+</script>
